@@ -1,4 +1,3 @@
--- Script to create sample data for Users, Posts, and Comments (Corrected with TIMESTAMP Casting)
 
 -- Sample Data Creation
 
@@ -44,7 +43,6 @@ BEGIN
     END;
 END $$;
 
--- Verification (Optional - to check if data was inserted)
 SELECT * FROM Users;
 SELECT * FROM Posts;
 SELECT * FROM Comments;
