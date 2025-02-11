@@ -1,0 +1,40 @@
+[
+    {
+      "postID": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "postContent": "Just sharing some thoughts today.",
+      "pictureUrl": null,
+      "dateAdded": "2024-02-09T14:30:00Z",
+      "posterUserID": "u4v5w6x7-y8z9-0123-4567-890123abcdef",
+      "posterJoinDate": "2024-02-08T09:00:00Z",
+      "comments": [
+        {
+          "commentID": "c1d2e3f4-g5h6-9012-3456-789012abcdef",
+          "userID": "p2q3r4s5-t6u7-8901-2345-678901abcdef",
+          "commentContent": "Interesting perspective, thanks for sharing.",
+          "dateAdded": "2024-02-09T15:00:00Z"
+        }
+      ]
+    },
+    {
+      "postID": "f8g9h0i1-j2k3-4567-890a-bcdef0123456",
+      "postContent": "Hello world! This is my first post.",
+      "pictureUrl": "image_url_example.jpg",
+      "dateAdded": "2024-02-09T10:00:00Z",
+      "posterUserID": "p2q3r4s5-t6u7-8901-2345-678901abcdef",
+      "posterJoinDate": "2024-02-06T10:00:00Z",
+      "comments": [
+        {
+          "commentID": "l9m0n1o2-p3q4-5678-90ab-cdef01234567",
+          "userID": "u4v5w6x7-y8z9-0123-4567-890123abcdef",
+          "commentContent": "Great post! I agree.",
+          "dateAdded": "2024-02-09T11:00:00Z"
+        },
+        {
+          "commentID": "r5s6t7u8-v9w0-1234-5678-90abcdef0123",
+          "userID": "p2q3r4s5-t6u7-8901-2345-678901abcdef",
+          "commentContent": "Adding another thought to this.",
+          "dateAdded": "2024-02-09T12:30:00Z"
+        }
+      ]
+    }
+  ]
