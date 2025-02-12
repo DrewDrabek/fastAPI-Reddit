@@ -1,30 +1,28 @@
--- Enable the uuid-ossp extension if not already enabled
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- CreateUser: Registers a New User
-CREATE OR REPLACE FUNCTION CreateUser(
-    _userID UUID,
+CREATE OR REPLACE FUNCTION CreateUser( -- The create or replace is nice to use just incase
+    _userID UUID, -- The _ is a common way to distinguish 
     _joinDate TIMESTAMP DEFAULT NOW()
-) RETURNS VOID AS $$
+) RETURNS VOID AS $$ -- This means that the sproc does not return anything - the $$ define the function body and are like more over ''
     INSERT INTO Users (userID, joinDate)
     VALUES (_userID, _joinDate);
-$$ LANGUAGE sql;
+$$ LANGUAGE sql; -- THis is the end of the sproc and the langauage that is going to be used
 
 -- CreatePost: User Creates a Post
 CREATE OR REPLACE FUNCTION CreatePost(
     _userID UUID,
-    _postContent VARCHAR(200),
-    _pictureUrl VARCHAR(50) DEFAULT NULL
+    _postContent VARCHAR(200), -- 200 is the length of the text that is allowed
+    _pictureUrl VARCHAR(50) DEFAULT NULL -- the default null is because not everything is going to have a pocture
 ) RETURNS UUID AS $$
     INSERT INTO Posts (userID, postContent, dateAdded, pictureUrl)
-    VALUES (_userID, _postContent, NOW(), _pictureUrl)
+    VALUES (_userID, _postContent, NOW(), _pictureUrl) -- the now is for when the post is added
     RETURNING postID; -- Directly return the generated postID
 $$ LANGUAGE sql;
 
 -- GetPosts: Fetch All Posts
 CREATE OR REPLACE FUNCTION GetPosts()
 RETURNS TABLE (
-    postID UUID,
+    postID UUID, -- These are the contents that are returned
     userID UUID,
     joinDate TIMESTAMP,
     postContent VARCHAR(200),
@@ -35,7 +33,7 @@ RETURNS TABLE (
         p.postID, p.userID, u.joinDate,
         p.postContent, p.pictureUrl, p.dateAdded
     FROM Posts p
-    JOIN Users u ON p.userID = u.userID
+    JOIN Users u ON p.userID = u.userID -- this is an inner join
     ORDER BY p.dateAdded DESC;
 $$ LANGUAGE sql;
 
@@ -62,7 +60,7 @@ CREATE OR REPLACE FUNCTION AddComment(
 DECLARE
     _commentID UUID; -- Declare _commentID variable
 BEGIN
-    _commentID := uuid_generate_v4(); -- Assign UUID to the variable
+    _commentID := uuid_generate_v4(); -- Assign UUID to the variable before the insert statement 
     INSERT INTO Comments (commentID, userID, postID, commentContent, dateAdded)
     VALUES (_commentID, _userID, _postID, _commentContent, NOW());
 
@@ -95,3 +93,39 @@ CREATE OR REPLACE FUNCTION DeleteComment(_commentID UUID)
 RETURNS VOID AS $$
     DELETE FROM Comments WHERE commentID = _commentID;
 $$ LANGUAGE sql;
+
+-- Here is a comment that goes over the joins
+
+-- SQL JOIN Types: Short Explanation
+
+-- INNER JOIN: Returns only rows where there's a match in BOTH tables based on the join condition.
+--   If there's no match in either table, the row is excluded.  Most common join type.
+--   Example:  SELECT * FROM table1 INNER JOIN table2 ON table1.id = table2.id;
+
+-- LEFT (OUTER) JOIN: Returns ALL rows from the LEFT table, and the matching rows from the RIGHT table.
+--   If there's no match in the RIGHT table, NULL values are returned for the RIGHT table's columns.
+--   Example:  SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id;
+
+-- RIGHT (OUTER) JOIN: Returns ALL rows from the RIGHT table, and the matching rows from the LEFT table.
+--   If there's no match in the LEFT table, NULL values are returned for the LEFT table's columns.
+--   (Essentially the reverse of LEFT JOIN; less commonly used than LEFT JOIN).
+--   Example:  SELECT * FROM table1 RIGHT JOIN table2 ON table1.id = table2.id;
+
+-- FULL (OUTER) JOIN: Returns ALL rows from BOTH tables.
+--   If there's a match, the corresponding rows are combined.
+--   If there's no match in one table, NULL values are returned for that table's columns.
+--   Example:  SELECT * FROM table1 FULL OUTER JOIN table2 ON table1.id = table2.id;
+
+-- SQL JOIN Types: Visual Explanation (Venn Diagram Analogy)
+
+-- INNER JOIN:  Think of it as the "overlap" or "intersection" of two circles (Venn diagram).  Only the parts where they both have data.
+--   Example:  SELECT * FROM table1 INNER JOIN table2 ON table1.id = table2.id;
+
+-- LEFT (OUTER) JOIN:  The *entire* left circle, plus the *overlapping* part with the right circle.  Any parts of the left circle that *don't* overlap get paired with NULLs from the right.
+--   Example:  SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id;
+
+-- RIGHT (OUTER) JOIN: The *entire* right circle, plus the *overlapping* part. (NULLs for non-matching left-side data)
+--   Example:  SELECT * FROM table1 RIGHT JOIN table2 ON table1.id = table2.id;
+
+-- FULL (OUTER) JOIN:  *Both* entire circles.  If there's overlap, great.  If not, NULLs fill in the gaps.
+--   Example:  SELECT * FROM table1 FULL OUTER JOIN table2 ON table1.id = table2.id;
